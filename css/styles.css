@@ -19,6 +19,8 @@
 */
 
 :root {
+    /* color */
+
     --color-iris: #4d5ae5;
     --color-ocean: #404bbf;
     --color-navy-blue: #2e2f42;
@@ -31,6 +33,17 @@
     --color-grey: #2e2f42;
     --color-white: #ffffff;
     --color-dairy: #fcfcfc;
+
+    /* z-index */
+
+    --z-index-header: 10;
+    --z-index-hero: 1;
+    --z-index-backdrop: 100;
+
+    /* transition */
+
+    --anim-fast: 250ms;
+    --cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /**
@@ -153,6 +166,10 @@ img {
 */
 
 .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: var(--z-index-header);
     background-color: var(--color-white);
     border-bottom: 1px solid #E7E9FC;
     box-shadow: 0px 2px 1px rgba(46, 47, 66, 0.08), 0px 1px 1px rgba(46, 47, 66, 0.16), 0px 1px 6px rgba(46, 47, 66, 0.08);
@@ -196,22 +213,9 @@ img {
     padding-bottom: 24px;
 }
 
-/* .header-link-after {
+.header-nav-link {
     position: relative;
-} */
 
-/* .header-link-after:hover:after {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 4px;
-    content: "";
-    background-color: var(--color-ocean);
-    border-radius: 2px;
-    margin-top: 20px;
-} */
-
-.header-link {
     padding-top: 24px;
     padding-bottom: 24px;
     font-family: inherit;
@@ -221,16 +225,40 @@ img {
     font-size: 16px;
     line-height: 1.5;
     letter-spacing: 0.02em;
+
+    transition: color var(--anim-fast) var(--cubic-bezier);
 }
 
-.header-link:focus,
-.header-link:hover {
-    font-family: inherit;
-    font-style: normal;
+.header-nav-link:focus,
+.header-nav-link:hover {
     color: var(--color-ocean);
     ;
 }
 
+.header-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    display: block;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+
+    transition: background-color var(--anim-fast) var(--cubic-bezier);
+
+}
+
+.header-nav-link.current {
+    color: var(--color-ocean);
+}
+
+.header-nav-link.current::after,
+.header-nav-link:hover:after,
+.header-nav-link:focus:after {
+    background-color: var(--color-ocean);
+}
 
 .header-address {
     font-style: normal;
@@ -247,11 +275,12 @@ img {
     font-family: inherit;
     color: var(--color-slate);
 
+    transition: color var(--anim-fast) var(--cubic-bezier);
+
 }
 
 .header-address-link:focus,
 .header-address-link:hover {
-    font-family: inherit;
     color: var(--color-ocean);
 }
 
@@ -260,11 +289,12 @@ img {
     padding-bottom: 24px;
     font-family: inherit;
     color: var(--color-slate);
+
+    transition: color var(--anim-fast) var(--cubic-bezier);
 }
 
 .header-number-link:focus,
 .header-number-link:hover {
-    font-family: inherit;
     color: var(--color-ocean);
 }
 
@@ -278,6 +308,11 @@ img {
     max-width: 1440px;
     background-color: rgba(46, 47, 66, 0.7);
     background-image: linear-gradient(rgba(46, 47, 66, 0.7), rgba(46, 47, 66, 0.7)), url(../images/studio/hero/people-office-hero.jpg);
+
+    position: relative;
+    top: 75px;
+    z-index: var(--z-index-hero);
+
 
     margin-left: auto;
     margin-right: auto;
@@ -317,13 +352,16 @@ img {
     display: block;
     line-height: 1.50;
     min-width: 169px;
+    border-radius: 4px;
+
+    transition: background-color var(--anim-fast) var(--cubic-bezier);
 }
 
 .hero-button:focus,
 .hero-button:hover {
     background-color: var(--color-ocean);
-    font-style: normal;
-    border-radius: 4px;
+
+
 }
 
 
@@ -506,6 +544,8 @@ img {
     height: 100%;
     background-color: var(--color-iris);
     border-radius: 50%;
+
+    transition: background-color var(--anim-fast) var(--cubic-bezier);
 }
 
 .socials-team-link:hover,
@@ -556,6 +596,8 @@ img {
     border: 1px solid #8E8F99;
     border-radius: 4px;
     color: var(--color-light-slate);
+
+    transition: color var(--anim-fast) var(--cubic-bezier), border-color var(--anim-fast) var(--cubic-bezier);
 
 }
 
@@ -640,6 +682,8 @@ img {
     height: 100%;
     border-radius: 50%;
     background-color: var(--color-iris);
+
+    transition: background-color var(--anim-fast) var(--cubic-bezier);
 }
 
 
@@ -653,10 +697,102 @@ img {
 }
 
 /**
+  |============================
+  | MODAL WINDOW STYLES
+  |============================
+*/
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-index-backdrop);
+
+    background-color: rgba(46, 47, 66, 0.4);
+
+    transition-property: opacity, visibility, background-color;
+    transition-duration: var(--anim-fast), var(--anim-fast), var(--anim-fast);
+    transition-timing-function: var(--cubic-bezier), var(--cubic-bezier), var(--cubic-bezier);
+}
+
+.backdrop.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition-delay: 500ms;
+
+    background-color: rgba(46, 47, 66, 0);
+}
+
+.modal {
+    width: 400px;
+    min-height: 550px;
+    padding: 24px;
+    opacity: 1;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0) scale(1);
+
+
+    background-color: var(--color-dairy);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 2px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+
+    transition: transform 500ms ease-in 250ms, opacity 500ms ease-in 250ms;
+}
+
+.backdrop.is-hidden .modal {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(360deg) scale(0.2);
+}
+
+.madal-btn-exit {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    display: block;
+
+    width: 24px;
+    height: 24px;
+
+
+    border-radius: 50%;
+    color: var(--color-navy-blue-modal);
+    background-color: var(--color-cornflower);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+
+}
+
+.madal-btn-exit:hover,
+.madal-btn-exit:focus {
+    color: var(--color-white);
+    background-color: var(--color-ocean);
+
+}
+
+.modal-icon-exit {
+    fill: currentColor;
+
+}
+
+.modal-icon-exit:hover,
+.modal-icon-exit:focus {}
+
+
+
+/**
    |============================
    | PAGE - PORTFOLIO
    |============================
  */
+
 
 
 /**
@@ -695,6 +831,10 @@ img {
     padding: 12px 24px;
     border: 1px solid var(--color-cornflower);
     border-radius: 4px;
+
+    transition-property: color, background-color, border, box-shadow;
+    transition-duration: var(--anim-fast), var(--anim-fast), var(--anim-fast), var(--anim-fast);
+    transition-timing-function: var(--cubic-bezier), var(--cubic-bezier), var(--cubic-bezier), var(--cubic-bezier);
 }
 
 .portfolio-button-item:focus,
@@ -726,6 +866,8 @@ img {
 .link-picture {
     text-decoration: none;
     display: block;
+
+    transition: box-shadow var(--anim-fast) var(--cubic-bezier);
 }
 
 .link-picture:hover,
@@ -733,7 +875,37 @@ img {
     box-shadow: 0px 1px 6px rgba(46, 47, 66, 0.08), 0px 1px 1px rgba(46, 47, 66, 0.16), 0px 2px 1px rgba(46, 47, 66, 0.08);
 }
 
+.portfolio-box-label {
+    position: relative;
+    overflow: hidden;
+}
+
 .portfolio-picture {}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(100%);
+
+    width: 100%;
+    height: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 40px;
+
+    background-color: rgba(69, 64, 139, 0.76);
+
+    transition: transform var(--anim-fast) var(--cubic-bezier);
+}
+
+.portfolio-item:hover .overlay {
+    transform: translateY(0);
+}
+
+.overlay-label {
+    color: var(--color-cloud);
+}
 
 .portfolio-wraper {
     padding: 32px 16px;
